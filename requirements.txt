@@ -1,0 +1,6 @@
+pyodbc
+numpy
+pandas
+google
+openpyxl
+requests
