@@ -29,7 +29,9 @@ def convert_to_persian(lattin_word):
     persian_word = list(alphabet[letter] for letter in lowcase_lattin_word if letter in alphabet.keys())
     for i in to_replace.keys():
         persian_word.insert(i, to_replace[i])
-    return ''.join(char for char in persian_word), lattin_word
+    persian_word = ''.join(char for char in persian_word)
+    combined_word = persian_word + ' ' + lattin_word
+    return persian_word, lattin_word, combined_word
 
 
 
@@ -44,13 +46,13 @@ def equivalent_words(search_keywords):
     equi_words = list()
     websites_text = list()
     for word in search_keywords:
-        google_search = search(word, stop=1)
+        google_search = search(word, num_results=1)
         for url in google_search:
             try:
                 resp = requests.get(url)
-                context = requests.get(url).text
+                context = resp.text
                 if resp.status_code == 200:
-                    #             print(resp.text)
+                    print(url)
                     soup = BeautifulSoup(context, 'html.parser')
                     for script in soup(["script", "style"]):
                         script.extract()
@@ -74,7 +76,6 @@ def equivalent_words(search_keywords):
             for word in all_words:
                 if words_similarity_rate(search_keywords[0], word) > 0.75:
                     equi_words.append(cleanse_words(word))
-    # equi_words.extend(search_keywords[0])
     return list(dict.fromkeys(equi_words))[0:3]
 
 
